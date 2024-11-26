@@ -40,7 +40,7 @@ function draw(vol) {
     gradient.addColorStop(1, 'yellow');
     gradient.addColorStop(0, 'red');
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, canvas.height - vol, canvas.width, vol);
+    ctx.fillRect(5, canvas.height - vol, canvas.width-10, vol);
     ctx.fillStyle = styles.get('color').toString();
     // threshold
     ctx.fillText(Math.floor(threshold), 5, canvas.height - threshold - 5);
