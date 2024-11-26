@@ -4,7 +4,7 @@ const content = document.getElementById('content');
 const canvas = document.getElementById('canvas');
 const audioContext = new AudioContext();
 const analyser = audioContext.createAnalyser();
-var threshold = 30;
+var threshold = 60;
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
         const source = audioContext.createMediaStreamSource(stream);
