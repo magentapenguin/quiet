@@ -18,7 +18,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             analyser.getByteFrequencyData(dataArray);
             const average = dataArray.reduce((a, b) => a + b) / bufferLength;
             
-            content.style.opacity = average / (threshold);
+            content.style.opacity = Math.pow(average / threshold, 2);
 
             draw(average);
             let end = Date.now();
@@ -45,7 +45,7 @@ function draw(vol) {
     // threshold
     ctx.fillText(Math.floor(threshold), 5, canvas.height - threshold - 5);
     ctx.fillRect(0, canvas.height - threshold, canvas.width, 2);
-    ctx.fillText(Math.floor(vol), 10, 10);
+    ctx.fillText(Math.floor(vol), 30, 10);
 }
 
 var dragging = false;
