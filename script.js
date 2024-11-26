@@ -18,7 +18,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             analyser.getByteFrequencyData(dataArray);
             const average = dataArray.reduce((a, b) => a + b) / bufferLength;
             
-            content.style.opacity = Math.pow(average / threshold, 2);
+            content.style.opacity = Math.pow(average / threshold, 3);
 
             draw(average);
             let end = Date.now();
