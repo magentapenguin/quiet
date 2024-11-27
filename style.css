@@ -31,3 +31,9 @@ body, html {
     left: 5px;
     z-index: 5;
 }
+#fps {
+    position: fixed;
+    bottom: 5px;
+    right: 5px;
+    z-index: 5;
+}

@@ -5,6 +5,17 @@ const canvas = document.getElementById('canvas');
 const audioContext = new AudioContext();
 const analyser = audioContext.createAnalyser();
 var threshold = 60;
+if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    content.textContent = 'This browser does not support the MediaDevices API';
+    throw new Error('This browser does not support the MediaDevices API');
+}
+if (!audioContext) {
+    content.textContent = 'This browser does not support the AudioContext API';
+    throw new Error('This browser does not support the AudioContext API');
+}
+if (localStorage.getItem('threshold')) {
+    threshold = localStorage.getItem('threshold') * 1;
+}
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
         const source = audioContext.createMediaStreamSource(stream);
@@ -12,8 +23,8 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         analyser.fftSize = 2048;
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
+        let start = Date.now();
         const checkVolume = () => {
-            let start = Date.now();
             audioContext.resume();
             analyser.getByteFrequencyData(dataArray);
             const average = dataArray.reduce((a, b) => a + b) / bufferLength;
@@ -21,9 +32,10 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             content.style.opacity = Math.pow(average / threshold, 3);
 
             draw(average);
-            let end = Date.now();
-            let elapsed = end - start;
-            setTimeout(checkVolume, 1 / 30 - elapsed); // delta time at 30fps
+            let elapsed = (Date.now() - start)/1000; // in seconds
+            document.getElementById('fps').textContent = Math.round(1/elapsed)+' fps';
+            setTimeout(checkVolume, Math.max(0, 1/30 - elapsed)*1000);
+            start = Date.now();
         };
         checkVolume();
     })
@@ -38,14 +50,14 @@ function draw(vol) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(1, 'yellow');
-    gradient.addColorStop(0, 'red');
+    gradient.addColorStop((canvas.height - threshold)/canvas.height, 'red');
     ctx.fillStyle = gradient;
     ctx.fillRect(5, canvas.height - vol, canvas.width-10, vol);
     ctx.fillStyle = styles.get('color').toString();
     // threshold
-    ctx.fillText(Math.floor(threshold), 5, canvas.height - threshold - 5);
+    ctx.fillText(Math.floor(threshold), 5, canvas.height - threshold - (canvas.height - threshold<17?-12:5));
     ctx.fillRect(0, canvas.height - threshold, canvas.width, 2);
-    ctx.fillText(Math.floor(vol), 30, 10);
+    ctx.fillText(Math.floor(vol), 30, canvas.height - vol - 5);
 }
 
 var dragging = false;
@@ -61,6 +73,7 @@ canvas.addEventListener('mousemove', e => {
     if (dragging) {
         canvas.style.cursor = 'grabbing';
         threshold = canvas.height - e.offsetY;
+        localStorage.setItem('threshold', threshold);
     } else if (isInside(e.offsetX, e.offsetY, 0, canvas.height - threshold, canvas.width, 5)) {
         canvas.style.cursor = 'grab';
     } else {
