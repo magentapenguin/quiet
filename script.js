@@ -69,7 +69,7 @@ canvas.addEventListener('mousedown', e => {
     };
 });
 
-document.addEventListener('mousemove', e => {
+canvas.addEventListener('mousemove', e => {
     if (dragging) {
         canvas.style.cursor = 'grabbing';
         threshold = canvas.height - e.offsetY;
@@ -81,7 +81,7 @@ document.addEventListener('mousemove', e => {
     }
 });
 
-document.addEventListener('mouseup', e => {
+canvas.addEventListener('mouseup', e => {
     dragging = false;
     canvas.style.cursor = 'default';
 });
