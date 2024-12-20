@@ -64,7 +64,7 @@ var dragging = false;
 const isInside = (x, y, rx, ry, rw, rh) => x > rx && x < rx + rw && y > ry && y < ry + rh;
 
 canvas.addEventListener('mousedown', e => {
-    if (isInside(e.offsetX, e.offsetY, 0, canvas.height - threshold, canvas.width, 5)) {
+    if (isInside(e.offsetX, e.offsetY, 0, canvas.height - threshold, canvas.width, 10)) {
         dragging = true;
     };
 });
@@ -74,7 +74,7 @@ document.addEventListener('mousemove', e => {
         canvas.style.cursor = 'grabbing';
         threshold = canvas.height - e.offsetY;
         localStorage.setItem('threshold', threshold);
-    } else if (isInside(e.offsetX, e.offsetY, 0, canvas.height - threshold, canvas.width, 5)) {
+    } else if (isInside(e.offsetX, e.offsetY, 0, canvas.height - threshold, canvas.width, 10)) {
         canvas.style.cursor = 'grab';
     } else {
         canvas.style.cursor = 'default';
